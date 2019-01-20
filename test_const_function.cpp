@@ -20,7 +20,18 @@ public:
         dummy1();
         // dummy2();     // error, not declared as const
     }
-};
+
+    int read_p2(int x) const {
+        mdata = x;
+        // data is declared without mutable keyword, not modifiable in const function
+        // data = x;
+        return data;
+    }
+
+private:
+    int data;
+    // mutable keyword is to get rid of const keyword
+    mutable int mdata;};
 
 int main() {
 }
