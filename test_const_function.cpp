@@ -28,6 +28,27 @@ public:
         return data;
     }
 
+    // --------------------------------------------------------------
+
+    // const version f
+    const int& f() const {
+        //...
+        //...
+        return data;
+    }
+
+    // non-const version f
+    // reuse code of const version
+    // const_cast is to remove const of return value
+    // static_cast is to add const to *this for invoking const version f()
+    int& f() {
+        return const_cast<int&>(
+            static_cast<const A&>(*this).f()
+        );
+    }
+
+    // --------------------------------------------------------------
+
 private:
     int data;
     // mutable keyword is to get rid of const keyword
