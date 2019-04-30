@@ -1,4 +1,6 @@
 #include<iostream>
+#include<thread>
+#include<list>
 using std::cout;
 using std::endl;
 
@@ -20,7 +22,13 @@ private:
 class B {
     public :
         static int func () {
+			/* After c++11, this is MT-safe*/
             static A a {"static in member func"};
+			return 0;
+        }
+
+        int func2() {
+            static A a {"static in member func2"};
         }
 
         static A m;
@@ -33,7 +41,19 @@ A B::m {"class static"};
 int main() {
     static A x {"static in main"};
     cout << __func__ << endl;
-    B::func();
+    std::list<std::thread*> thread_list;
+    for(int idx=0; idx<200; idx++){
+        auto *t = new std::thread([](void){
+            B::func();
+            B b {};
+            b.func2();
+        });
+        thread_list.push_back(t);
+    }
+    for(auto *t: thread_list){
+        t->join();
+        delete t;
+    }
 }
 
 
