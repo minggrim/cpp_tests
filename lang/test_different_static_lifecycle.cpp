@@ -9,44 +9,46 @@ public:
     A(const std::string &n) : name(n) {
         cout << name << " --- CON" << endl;
     }
+
     ~A() {
         cout << name << " --- DES" << endl;
     }
+
     void my_name() {
         cout << name << " --- MYNAME" << endl;
     }
+
+    static int func () {
+        /* After c++11, this is MT-safe*/
+        static A a {"static in member func"};
+        return 0;
+    }
+
+    int func2() {
+        static A a {"static in member func2"};
+    }
+
+    static A m;
 private:
     std::string name;
 };
 
-class B {
-    public :
-        static int func () {
-			/* After c++11, this is MT-safe*/
-            static A a {"static in member func"};
-			return 0;
-        }
-
-        int func2() {
-            static A a {"static in member func2"};
-        }
-
-        static A m;
-};
-
 A iamglobal {"global var"};
 
-A B::m {"class static"};
+A A::m {"class static"};
+
+static void exiter() {
+    cout << __func__ << endl;
+}
 
 int main() {
+    std::atexit(exiter);
     static A x {"static in main"};
     cout << __func__ << endl;
     std::list<std::thread*> thread_list;
     for(int idx=0; idx<200; idx++){
         auto *t = new std::thread([](void){
-            B::func();
-            B b {};
-            b.func2();
+            A::func();
         });
         thread_list.push_back(t);
     }
