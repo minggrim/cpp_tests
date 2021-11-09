@@ -11,6 +11,15 @@ int DP_LIS_internal_n2(const std::vector<int> & seq) {
     // dp[i] : 以i "為尾" 的最大子序列長度.
     std::vector<int> dp (n, 1);
 
+    /*
+     *     n1     n2     n3    n4    n5
+     *                               dp[n5] = Max( 1,
+     *                                             LIS(n1) + 1, if n5 >= n1 i.e. [...,n1] + n5 create a longer LIS then LIS(n1)
+     *                                             LIS(n2) + 1, if n5 >= n2 i.e. [...,n2] + n5 create a longer LIS then LIS(n2)
+     *                                             LIS(n3) + 1, if n5 >= n3 i.e. [...,n3] + n5 create a longer LIS then LIS(n3)
+     *                                             LIS(n4) + 1, if n5 >= n4 i.e. [...,n4] + n5 create a longer LIS then LIS(n4)
+     *                                           )
+     */
     dp[0] = 1;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < i; j++) {
