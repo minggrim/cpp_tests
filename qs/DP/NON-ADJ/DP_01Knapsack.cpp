@@ -4,7 +4,7 @@
 
 using std::vector;
 
-int DP_01KnapSack(const std::vector<int> &values, const std::vector<int> & weights, int N, int W) {
+int DP_01KnapSack_internal(const std::vector<int> &values, const std::vector<int> & weights, int N, int W) {
     /*
      * dp[i][j] : the max value of i items and total weight <= j
      *
@@ -39,8 +39,31 @@ int DP_01KnapSack(const std::vector<int> &values, const std::vector<int> & weigh
     return dp[N][W];
 }
 
+int DP_01KnapSack_SaveSpace_internal(const std::vector<int> &values, const std::vector<int> & weights, int N, int W) {
+    vector<int> dp (W+1, 0);
+
+    for (int i = 1; i < N+1; i++) {
+        int item_weight = weights[i-1];
+        int item_value = values[i-1];
+        for (int j = W; j > 0; j--) {                      // reversely scan to keep smaller idx's value
+            if (j >= item_weight) {
+                dp[j] = std::max(
+                    dp[j],                                 // Not to pick, dp[j] records the previous row jth item
+                    dp[j-item_weight] + item_value         // To pick:
+                );
+            }
+            else {
+                // no need change
+            }
+        }
+    }
+
+    return dp[W];
+}
+
 int main(int argc, const char *argv[]) {
     const std::vector<int> values {5, 2, 3, 4, 7};
     const std::vector<int> weights {3, 4, 2, 1, 9};
-    std::cout << "Result of " << DP_01KnapSack(values, weights, values.size(), 10) << std::endl;
+    std::cout << "Result of " << DP_01KnapSack_internal(values, weights, values.size(), 10) << std::endl;
+    std::cout << "Result of " <<  DP_01KnapSack_SaveSpace_internal(values, weights, values.size(), 10) << std::endl;
 }
