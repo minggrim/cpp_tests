@@ -60,8 +60,27 @@ int DP_CompleteKnapSack_internal(const std::vector<int> &values, const std::vect
     return dp[N][W];
 }
 
+int DP_CompleteKnapSack_save_space_internal(const std::vector<int> &values, const std::vector<int> & weights, int N, int W) {
+    vector<int> dp(W+1, 0);
+    for (int i = 1; i < N+1; i++) {
+        int item_weight = weights[i-1];
+        int item_value = values[i-1];
+        for (int j = 1; j < W+1; j++) {
+            if (j >= item_weight) {
+                dp[j] = std::max(
+                    dp[j],                                 // Not to pick, dp[j] currently record the idx(i, j)
+                    dp[j-item_weight] + item_value         // We scan left to right, so j-item_weight of this row is already updated.
+                );
+            }
+        }
+    }
+
+    return dp[W];
+}
+
 int main(int argc, const char *argv[]) {
     const std::vector<int> values {5, 2, 3, 4, 7};
     const std::vector<int> weights {3, 4, 2, 1, 9};
     std::cout << "Result of " << DP_CompleteKnapSack_internal(values, weights, values.size(), 10) << std::endl;
+    std::cout << "Result of " << DP_CompleteKnapSack_save_space_internal(values, weights, values.size(), 10) << std::endl;
 }
