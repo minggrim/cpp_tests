@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int findMinArrowShots(vector<vector<int>>& points) {
+         sort(
+             points.begin(),
+             points.end(),
+             [](const auto & p1, const auto &p2) ->bool {
+                 if (p1[1] < p2[1]) return true;
+                 else return false;
+             }
+         );
+        
+        ssize_t prev = LONG_MIN;
+        int arrow_cnt = 0;
+        for (auto & p : points) {
+            if (p[0]<=prev) {
+                
+            }
+            else {
+                arrow_cnt++;
+                prev = p[1];
+            }
+        }
+        
+        return arrow_cnt;
+    }
+};
