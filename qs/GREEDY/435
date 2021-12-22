@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+        std::sort(
+            intervals.begin(),
+            intervals.end(),
+            [](const vector<int> &el1, const vector<int> &el2)->bool {
+                if (el1[1] < el2[1]) return true;
+                else return false;
+            }
+        );
+        
+        int removed_cnt = 0;
+        int prev_end = INT_MIN;
+        for (auto &p : intervals) {
+            if (p[0] < prev_end) removed_cnt++;
+            else prev_end = p[1];
+        }
+        
+        return removed_cnt;
+    }
+};
