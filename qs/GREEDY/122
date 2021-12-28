@@ -1,0 +1,19 @@
+
+// x [?] y [^] z : if y < x, (z - y) > (z - x)       // [?] : unknown, [^] upgrade
+//                 if y >= x, (z - x) > (y - x) + (z - y)
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int prev = INT_MAX;
+        int max_profit = 0;
+        for (auto &p : prices) {
+            if (p > prev) {
+                max_profit += (p - prev);
+            }
+
+            prev = p;
+        }
+        
+        return max_profit;
+    }
+};
