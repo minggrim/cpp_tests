@@ -1,0 +1,67 @@
+/*
+   auxiliary for needle : abcababcb
+   auxiliary array element : which idx of needle we should go back if mismatching this element.
+          a  b  c  a  b  a  b  c  b
+         |-1|-1|-1|-1|-1|-1|-1|-1|-1|
+         +---------------------------
+p = -1   |  |-1|  |  |  |  |  |  |  |  iter1
+         +---------------------------
+p = -1   |  |  |-1|  |  |  |  |  |  |  iter2
+         +---------------------------
+p =  0   |  |  |  | 0|  |  |  |  |  |  iter3
+         +---------------------------
+p =  1   |  |  |  |  | 1|  |  |  |  |  iter4
+         +---------------------------
+p =  0   |  |  |  |  |  | 0|  |  |  |  iter5
+         +---------------------------
+p =  1   |  |  |  |  |  |  | 1|  |  |  iter6
+         +---------------------------
+p =  2   |  |  |  |  |  |  |  | 2|  |  iter7
+         +---------------------------
+p = -1   |  |  |  |  |  |  |  |  |-1|  iter8
+         +---------------------------
+
+*/
+
+class Solution {
+public:
+    int strStr(const string &haystack, const string &needle) {
+        int n = haystack.size(), s = needle.size(), p = -1;
+        if (s == 0) return 0;
+
+        vector<int> kmp_arr (s, -1);
+        auxiliary(needle, kmp_arr);
+        
+        for (int i = 0; i < n; i++) {
+            while (p > -1 && needle[p+1] != haystack[i]) {
+                p = kmp_arr[p];
+            }
+            
+            if (needle[p+1] == haystack[i]) {
+                p++;
+            }
+            
+            if (p == s -1) {
+                return i - s + 1;
+            }
+        }
+        
+        return -1;
+    }
+private:
+    void auxiliary(const string &needle, vector<int> & arr) {
+        int p = -1;
+
+        for (int i = 1; i < needle.size(); i++) {
+            while (p > -1 && needle[p+1] != needle[i]) {
+                p = arr[p];
+            }
+            
+            if (needle[p+1] == needle[i]) {
+                p ++;
+            }
+
+            arr[i] = p;
+        }
+    }
+};
