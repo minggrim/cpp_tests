@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int n = s.size();
+
+        int start = 0, end = 0, max_len = 0;
+        unordered_map<char, bool>  hit_map;
+        while (end < n) {
+            const char & c = s[end++];
+
+            if (!hit_map[c]) {
+                hit_map[c] = true;
+                continue;
+            }
+
+            max_len = max(max_len, end - start - 1);
+
+            while (true) {
+                const char & x = s[start++];
+                if (x == c) {
+                    break;
+                } 
+                else {
+                    hit_map[x] = false;
+                }
+            }
+        }
+        
+        max_len = max(max_len, end-start);
+        
+        return max_len;
+    }
+};
