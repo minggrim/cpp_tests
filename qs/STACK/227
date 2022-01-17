@@ -1,0 +1,86 @@
+// not good enough. the leet code's pure stack solution is better.
+// take - as negative number, + as positive number
+class Solution {
+private: 
+    int char_type(char c) {
+        if (c < 58 && c > 47) return 0;
+        else if (c < 48 && c > 41) return 1;
+        else return -1;
+    }
+    
+    int do_op (char c, int f, int b) {
+        if (c == '+') return f + b;
+        else if (c == '-') return f -b;
+        else if (c == '*') return f*b;
+        else if (c == '/') return f/b;
+        else assert(false);
+    }
+    
+    void calc_front(deque<int> &nums, deque<char> &ops) {
+            int f = nums.front();
+            nums.pop_front();
+            int b = nums.front();
+            nums.pop_front();
+            char c = ops.front();
+            ops.pop_front();
+            nums.push_front(do_op(c, f, b));
+    }
+
+    void calc_back(deque<int> &nums, deque<char> &ops) {
+            int b = nums.back();
+            nums.pop_back();
+            int f = nums.back();
+            nums.pop_back();
+            char c = ops.back();
+            ops.pop_back();
+            nums.push_back(do_op(c, f, b));
+    }
+    
+    void resolve_high(deque<int> &nums, deque<char> &ops) {
+        if (nums.size() < 2) return;
+        
+        if (ops.back() != '*' && ops.back() != '/') return;
+
+        calc_back(nums, ops);
+    }
+    
+    void resolve(deque<int> &nums, deque<char> &ops) {
+        while (nums.size() > 1) {
+            calc_front(nums, ops);
+        }
+    }
+public:
+    int calculate(string s) {
+        deque<int> nums;
+        deque<char> ops;
+        int i = 0;
+        int tmp = 0;
+        while (i < s.size()) {
+            switch (char_type(s[i])) {
+                case 1: {
+                    nums.push_back(tmp);
+                    tmp = 0;
+                    resolve_high(nums, ops);
+                    ops.push_back(s[i]);
+                    break;
+                }
+                case 0: {
+                    tmp = tmp * 10 + (s[i] - 48);
+                    break;
+                }
+                case -1: {
+                    break;
+                }
+            }
+
+            i++;
+        }
+
+        nums.push_back(tmp);
+        resolve_high(nums, ops);
+        
+        resolve(nums, ops);
+        
+        return nums[0];
+    }
+};
