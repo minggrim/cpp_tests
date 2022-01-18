@@ -1,0 +1,15 @@
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        vector<int> s_first_idx(256, 0), t_first_idx(256, 0);
+        for (int i = 0; i < s.size(); i++) {
+            if (s_first_idx[s[i]] != t_first_idx[t[i]]) return false;
+            // if (s_first_idx[s[i]]) continue;    // With this line : This first position of this char is the same
+                                                   // Without this line : This previous position of this char is the same
+                                                   // both can deduce isomorphic strings
+
+            s_first_idx[s[i]] = t_first_idx[t[i]] = i + 1;
+        }
+        return true;
+    }
+};
