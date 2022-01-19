@@ -1,0 +1,26 @@
+class Solution {
+public:
+    bool isBalanced(TreeNode* root) {
+        return is_balance_other(root) == -1 ? false : true ;
+    }
+    
+    int is_balance_mine(TreeNode * root,int &unbalance) {
+        if (!root) return 0;
+        
+        int left_depth = is_balance_mine(root->left, unbalance);
+        int right_depth = is_balance_mine(root->right, unbalance);
+        int diff = left_depth - right_depth;
+        if (diff > 1 || diff < -1) unbalance++;
+        return max(left_depth, right_depth) + 1;
+    }
+    
+    int is_balance_other(TreeNode* root) {
+        if (!root) return 0;
+        
+        int left = is_balance_other(root->left);
+        int right = is_balance_other(root->right);
+        if (left == -1 || right == -1 || left - right < -1 || left -right > 1) return -1;
+        
+        return max(left, right) + 1;
+    }
+};
