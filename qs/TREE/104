@@ -1,0 +1,12 @@
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        return depth(root, 0);
+    }
+private:
+    int depth(TreeNode* root, int d) {
+        if (!root) return d;
+        d++;
+        return max(depth(root->left, d), depth(root->right, d));
+    }
+};
