@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        int m = 0;
+        max_length(root, m);
+        
+        return m - 1;  // m : node count
+    }
+
+    int max_length(TreeNode* root, int &m) {
+        
+        int cur_depth;
+        if (root) {
+            int left_depth = max_length(root->left, m);
+            int right_depth = max_length(root->right, m);
+
+            if (left_depth + right_depth + 1 > m) m = left_depth + right_depth + 1;
+            cur_depth = max(left_depth , right_depth) + 1;
+        }
+        else {
+            cur_depth = 0;
+        }
+
+        return cur_depth;
+    }
+};
