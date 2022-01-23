@@ -1,0 +1,33 @@
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if (!root) return true;
+        
+        std::deque<TreeNode*> lfs, rfs;
+        if (root->left) lfs.push_back(root->left);
+        if (root->right) rfs.push_back(root->right);
+
+        while (lfs.size() == rfs.size() && lfs.size()) {
+            auto l = lfs.back(); lfs.pop_back();
+            auto r = rfs.back(); rfs.pop_back();
+            
+            // V
+            if (l->val != r->val) return false;
+            
+            // symmetric struct test.
+            if ( !!(l->right) != !!(r->left) ) return false;
+            if ( !!(l->left) != !!(r->right) ) return false;
+            
+            // L -> R
+            if (l->right) lfs.push_back(l->right);
+            if (l->left) lfs.push_back(l->left);
+            
+            // R->L
+            if (r->left) rfs.push_back(r->left);
+            if (r->right) rfs.push_back(r->right);
+        }
+        
+        if (lfs.size() != rfs.size()) return false;
+        else return true;
+    }
+};
