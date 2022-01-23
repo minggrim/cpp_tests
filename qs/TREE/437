@@ -1,0 +1,46 @@
+class Solution {
+public:
+    int pathSum(TreeNode* root, int targetSum) {
+        return root ? includeNode(root, targetSum) +
+            pathSum(root->left, targetSum) +
+            pathSum(root->right, targetSum): 0 ;
+    }
+
+    int includeNode(TreeNode * root, int track) {
+        if (!root) return 0;
+        
+        int cnt = (track - root->val) ? 0 : 1;
+        
+        // track cont.
+        track = track - root->val;
+        cnt += includeNode(root->left, track);
+        cnt += includeNode(root->right, track);
+        return cnt;
+    }
+};
+
+/*
+ * Wrong answer but why? any dup in the 4-times per node logic?
+ */
+class Solution {
+public:
+    int pathSum(TreeNode* root, int targetSum) {
+        return calc_cnt(root, targetSum, targetSum);
+    }
+
+    int calc_cnt(TreeNode * root, int track, int targetSum) {
+        if (!root) return 0;
+        
+        int cnt = (track - root->val) ? 0 : 1;
+        
+        // reload track.
+        cnt += calc_cnt(root->left, targetSum, targetSum);
+        cnt += calc_cnt(root->right, targetSum, targetSum);
+        
+        // track cont.
+        track = track - root->val;
+        cnt += calc_cnt(root->left, track, targetSum);
+        cnt += calc_cnt(root->right, track, targetSum);
+        return cnt;
+    }
+};
