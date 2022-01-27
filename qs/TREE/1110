@@ -1,0 +1,79 @@
+/* my method, not beautiful but faster*/
+class Solution {
+public:
+    struct Edge {
+        TreeNode* p_;
+        TreeNode* c_;
+        int direction;
+    };
+    
+    vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
+        if (!root) return {};
+
+        unordered_set<int> lookup {to_delete.begin(), to_delete.end()};
+        
+        vector<Edge> edges;
+        findNodes(nullptr, root, lookup, edges, 0);
+        
+        vector<TreeNode*> ret;
+        if (!lookup.count(root->val)) {
+            ret.push_back(root);
+        }
+
+        for (auto &p : edges) {
+            if (p.p_) {
+                if (p.direction) {
+                    p.p_->right = nullptr;
+                }
+                else {
+                    p.p_->left = nullptr;
+                }
+            }
+            
+            if (p.c_->left && !lookup.count(p.c_->left->val) ) ret.push_back(p.c_->left);
+            if (p.c_->right && !lookup.count(p.c_->right->val) ) ret.push_back(p.c_->right);
+
+        }
+        return ret;
+    }
+    
+    void findNodes(TreeNode* p_, TreeNode* c_, unordered_set<int> &lookup, vector<Edge> & edges, int direction) {
+        if (!c_) return;
+        
+        if (lookup.count(c_->val)) {
+            // I am the deleting node
+            edges.push_back({p_, c_, direction});
+        }
+        
+        findNodes(c_, c_->left, lookup, edges, 0);
+        findNodes(c_, c_->right, lookup, edges, 1);
+    }
+};
+
+// other's beautiful solution in logically, but slower
+class Solution {
+public:
+    vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
+        unordered_set<int> l {to_delete.begin(), to_delete.end()};
+        vector<TreeNode*> ret;
+        root = helper(root, l, ret);
+        if (root) ret.push_back(root);
+        
+        return ret;
+    }
+
+    TreeNode * helper(TreeNode* root,  unordered_set<int> & l, vector<TreeNode*> &ret) {
+        if (!root) return nullptr;
+        
+        root->left = helper(root->left, l, ret);
+        root->right = helper(root->right, l, ret);
+        
+        if (l.count(root->val)) {
+            if (root->left) ret.push_back(root->left);
+            if (root->right) ret.push_back(root->right);
+            root = nullptr;
+        }
+        
+        return root;
+    }
+};
