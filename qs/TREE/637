@@ -1,0 +1,54 @@
+// my method , not good 2n
+class Solution {
+public:
+    vector<double> averageOfLevels(TreeNode* root) {
+        vector<double> l;
+        vector<int> c;
+        walk_sum(root, l, c, 0);
+        for (int i = 0; i < l.size(); i++) {
+            l[i] /= c[i];
+        }
+        return l;
+    }
+    
+    void walk_sum(TreeNode* root, vector<double> &l, vector<int> &c, int level) {
+        if (!root) return;
+
+        if (l.size() < level + 1) {
+            l.push_back(0);
+            c.push_back(0);
+        }
+        
+        l[level] += root->val;
+        c[level] ++;
+
+        walk_sum(root->left, l, c, level+1);
+        walk_sum(root->right, l, c, level+1);
+    }
+};
+
+class Solution {
+public:
+    vector<double> averageOfLevels(TreeNode* root) {
+        vector<double> avg_vec;
+        
+        queue<TreeNode*> q;
+        if (root) q.push(root);
+
+        for (;;) {
+            if (q.empty()) break;
+            int q_sz = q.size();
+            double avg = 0;
+            for (int i = 0; i < q_sz; i++) {
+                auto & el = q.front();
+                avg += el->val;
+                if (el->left) q.push(el->left);
+                if (el->right) q.push(el->right);
+                q.pop();
+            }
+            avg_vec.push_back(avg / q_sz);
+        }
+        
+        return avg_vec;
+    }
+};
