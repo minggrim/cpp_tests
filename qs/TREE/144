@@ -1,0 +1,24 @@
+
+// speed test on leetcode website : vec with reserve > vec = stack > deque
+
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> walks;
+        std::vector<TreeNode*> dfs_stack;
+        dfs_stack.reserve(100);  // the quiz specified the max nodes count is 100, allocate at once
+
+        if (root) dfs_stack.emplace_back(root);
+
+        while (dfs_stack.size()) {
+            auto * node = dfs_stack.back();
+            dfs_stack.pop_back();
+            walks.emplace_back(node->val);
+            
+            if (node->right) dfs_stack.emplace_back(node->right);
+            if (node->left) dfs_stack.emplace_back(node->left);
+        }
+        
+        return walks;
+    }
+};
