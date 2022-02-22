@@ -1,0 +1,51 @@
+class Trie {
+public:
+    Trie() {}
+    
+    void insert(string word) {
+        Trie * root = this;
+        for (int i = 0; i < word.size(); i++) {
+            root = root->add_c(word[i]);
+        }
+
+        root->add_c('\0');
+    }
+    
+    bool search(const string & word) {
+        Trie * root = this;
+        for (int i = 0; i < word.size(); i++) {
+            auto next = root->find_c(word[i]);
+            if (!next) return false;
+            
+            root = next;
+        }
+        
+        auto next = root->find_c('\0');
+        return next ? true : false ;
+    }
+    
+    bool startsWith(const string &prefix) {
+        Trie * root = this;
+        for (int i = 0; i < prefix.size(); i++) {
+            auto next = root->find_c(prefix[i]);
+            if (!next) return false;
+            
+            root = next;
+        }
+        
+        return true;
+    }
+    
+    private:
+    Trie * find_c(char c) {
+        auto p = children.find(c);
+        if (p == children.end()) return nullptr;
+        else return p->second;
+    }
+    
+    Trie * add_c(char c) {
+        if (children[c] == nullptr) children[c] = new Trie();
+        return children[c];
+    }
+    unordered_map<char, Trie*> children;
+};
