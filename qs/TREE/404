@@ -1,0 +1,14 @@
+class Solution {
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+        return _sumOfLeftLeaves(false, root);
+    }
+    
+    int _sumOfLeftLeaves(bool is_left, TreeNode * root) {
+        if (!root) return 0;
+
+        if (is_left && !root->left && !root->right) return root->val;
+        
+        return _sumOfLeftLeaves(true, root->left) + _sumOfLeftLeaves(false, root->right);
+    }
+};
