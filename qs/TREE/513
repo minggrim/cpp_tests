@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int findBottomLeftValue(TreeNode* root) {
+        return _findBottomLeftValue(root, 1) & 0xffffffff;
+    }
+    
+    uint64_t _findBottomLeftValue(TreeNode* root, int level) {
+        if (!root) return 0;
+
+        if (!root->left && !root->right) return ((uint64_t) level << 32) | (uint32_t) root->val;
+
+        uint64_t left = _findBottomLeftValue(root->left, level+1);
+        uint64_t right = _findBottomLeftValue(root->right, level+1);
+
+        if ( (left & 0xffffffff00000000) == (right & 0xffffffff00000000) ) return left;
+        else return max(left, right);
+    }
+};
