@@ -1,0 +1,21 @@
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        return _lowestCommonAncestor(root, std::min(p->val, q->val), std::max(p->val, q->val));
+    }
+
+    TreeNode* _lowestCommonAncestor(TreeNode* root, int l, int r) {
+        if (!root) return nullptr;
+
+        /* make use BST characteristic to find the first match in range l<= x <=r.
+        if (root->val < l) {
+            return _lowestCommonAncestor(root->right, l, r);
+        }
+        else if (root->val >r) {
+            return _lowestCommonAncestor(root->left, l, r);
+        }
+        else {
+            return root;
+        }
+    }
+};
