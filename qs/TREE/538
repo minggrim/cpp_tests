@@ -1,0 +1,25 @@
+// R V L
+class Solution {
+public:
+    TreeNode* convertBST(TreeNode* root) {
+        _convertBST(root, 0);
+        return root;
+    }
+    
+    // return value : sum of this  tree, l-subtree + v + r-subtree
+    int _convertBST(TreeNode * root, int base) {
+        if (!root) return 0;
+        
+        // root->val as memory to record : v + r()
+        root->val += _convertBST(root->right, base);
+
+        // v + r() + l()
+        int return_value = root->val + _convertBST(root->left, base + root->val);
+
+        // change this node value.
+        root->val += base;
+        
+		// return sum
+        return return_value;
+    }
+};
