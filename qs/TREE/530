@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int getMinimumDifference(TreeNode* root) {
+        int prev = -1;
+        int min_diff = INT_MAX;
+        _getMinimumDifference(root, prev, min_diff);
+        return min_diff;
+    }
+    
+    void _getMinimumDifference(TreeNode * root, int &prev, int &min_diff) {
+        if (!root) return;
+
+        _getMinimumDifference(root->left, prev, min_diff);
+
+        if (prev >= 0 && root->val - prev < min_diff) min_diff = root->val - prev;
+        prev = root->val;
+
+        _getMinimumDifference(root->right, prev, min_diff);
+    }
+};
